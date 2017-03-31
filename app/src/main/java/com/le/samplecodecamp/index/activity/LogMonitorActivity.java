@@ -1,4 +1,4 @@
-package com.le.samplecodecamp.eui.domain;
+package com.le.samplecodecamp.index.activity;
 
 import android.content.ClipData;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.os.OperationCanceledException;
 import android.support.v7.app.AppCompatActivity;
 
 import com.le.samplecodecamp.R;
+import com.le.samplecodecamp.eui.domain.DetailFragment;
+import com.le.samplecodecamp.eui.domain.LogContent;
+import com.le.samplecodecamp.eui.domain.LogFragment;
 import com.le.samplecodecamp.utils.LogUtils;
 
 import java.util.ArrayList;

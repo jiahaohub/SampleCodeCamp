@@ -91,7 +91,7 @@ public class LogView extends TextView implements LogNode {
         appendIfNotNull(outputBuilder, exceptionStr, delimiter);
 
         // In case this was originally called from an AsyncTask or some other off-UI thread,
-        // make sure the update occurs within the UI thread.
+        // make sure the enqueue occurs within the UI thread.
         ((Activity) getContext()).runOnUiThread( (new Thread(new Runnable() {
             @Override
             public void run() {

@@ -3,6 +3,13 @@
     package="com.le.samplecodecamp">
 
     <uses-permission android:name="android.permission.REAL_GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 获取IMEI -->
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".App"
@@ -33,10 +40,13 @@
         </service>
 
         <!-- 测试LogUtils写入文件 -->
-        <activity android:name=".activity.LogFileActivity" />
+        <activity android:name=".index.activity.LogFileActivity" />
 
         <!-- 查看domain日志文件 -->
-        <activity android:name=".eui.domain.LogMonitorActivity" />
+        <activity android:name=".index.activity.LogMonitorActivity" />
+
+        <!-- 管理自升级的activity -->
+        <activity android:name=".index.activity.PerformUpgradeActivity" />
     </application>
 
 </manifest>

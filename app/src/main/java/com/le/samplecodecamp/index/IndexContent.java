@@ -1,7 +1,8 @@
 package com.le.samplecodecamp.index;
 
-import com.le.samplecodecamp.activity.LogFileActivity;
-import com.le.samplecodecamp.eui.domain.LogMonitorActivity;
+import com.le.samplecodecamp.index.activity.LogFileActivity;
+import com.le.samplecodecamp.index.activity.LogMonitorActivity;
+import com.le.samplecodecamp.index.activity.PerformUpgradeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class IndexContent {
     static {
         addItem(new IndexItem("1", "LogFile", LogFileActivity.class));
         addItem(new IndexItem("2", "show me the fucking log", LogMonitorActivity.class));
+        addItem(new IndexItem("3", "Update Apk", PerformUpgradeActivity.class));
     }
 
     private static void addItem(IndexItem item) {

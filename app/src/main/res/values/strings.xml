@@ -5,4 +5,19 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- 自升级dialog -->
+    <string name="le_btn_string_confirm">Confirm</string>
+    <string name="le_btn_string_cancel">Cancel</string>
+    <string name="le_btn_string_upgrade_now">Update now</string>
+    <string name="le_btn_string_remind_later">Remind me later</string>
+    <string name="le_tv_string_found_new_version">New version available</string>
+    <string name="le_btn_string_exit">Exit</string>
+    <string name="le_tv_string_use_mobile_data_download_patch">Use mobile data to download the package?</string>
+    <string name="le_toast_string_start_download_patch">Downloading, please wait…</string>
+    <string name="le_toast_string_download_failure">Download failed</string>
+    <string name="le_toast_already_latest_version">Your software is up to date</string>
 </resources>

@@ -334,7 +334,7 @@ public class SelectionBuilder {
      */
     public int update(SQLiteDatabase db, ContentValues values) {
         assertTable();
-        Log.v(TAG, "update() " + this);
+        Log.v(TAG, "enqueue() " + this);
         return db.update(mTable, values, getSelection(), getSelectionArgs());
     }
 
