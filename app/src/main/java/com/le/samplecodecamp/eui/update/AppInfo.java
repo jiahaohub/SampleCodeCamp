@@ -17,6 +17,7 @@ public class AppInfo implements Parcelable {
 
     public String packageName;//包名
 
+    public String fileMd5;
 
     @Override
     public int describeContents() {
@@ -30,6 +31,7 @@ public class AppInfo implements Parcelable {
         dest.writeString(this.description);
         dest.writeString(this.fileUrl);
         dest.writeString(this.packageName);
+        dest.writeString(this.fileMd5);
     }
 
     public AppInfo() {
@@ -41,6 +43,7 @@ public class AppInfo implements Parcelable {
         this.description = in.readString();
         this.fileUrl = in.readString();
         this.packageName = in.readString();
+        this.fileMd5 = in.readString();
     }
 
     public boolean isForce() {
@@ -61,13 +64,11 @@ public class AppInfo implements Parcelable {
 
     @Override
     public String toString() {
-        return "AppInfo{" +
-                "upgradeType=" + upgradeType +
-                ", apkVersion='" + apkVersion + '\'' +
-                ", description='" + description + '\'' +
-                ", fileUrl='" + fileUrl + '\'' +
-                ", packageName='" + packageName + '\'' +
-                '}';
+        return packageName + "@" +
+                apkVersion + "@" +
+                upgradeType + "@" +
+                fileUrl + "@" +
+                fileMd5;
     }
 
 }

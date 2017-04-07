@@ -57,7 +57,7 @@ public class NetEngine {
 
         //加密
         String url;
-        if (false) {
+        if (true) {
             url = Url.GET_SINGLE_APK_INFO_URL_TESTSERVER + "?" + INetEncryptImpl.getInstance().encrypt(params);
         } else {
 //            url = Url.GET_SINGLE_APK_INFO_URL + "?" + INetEncryptImpl.getInstance().encrypt(params);

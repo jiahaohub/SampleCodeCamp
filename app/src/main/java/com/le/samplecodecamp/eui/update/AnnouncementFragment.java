@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.le.samplecodecamp.R;
-import com.letv.shared.widget.LeBottomSheet;
 
 public class AnnouncementFragment extends DialogFragment {
 
@@ -21,6 +20,7 @@ public class AnnouncementFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putParcelable(ARG_APP_INFO, appInfo);
         fragment.setArguments(args);
+        fragment.setCancelable(false);
         return fragment;
     }
 
@@ -54,8 +54,7 @@ public class AnnouncementFragment extends DialogFragment {
         LeUpgradeDialogBuilder builder = new LeUpgradeDialogBuilder(getContext());
         // 标题和内容，屏蔽返回键
         builder.setTitle(getContext().getString(R.string.le_tv_string_found_new_version))
-                .setContent(mAppInfo.description)
-                .setIgnoreBackPress(true);
+                .setContent(mAppInfo.description);
 
         // 按键事件
         if (mAppInfo.isForce()) {
@@ -88,9 +87,7 @@ public class AnnouncementFragment extends DialogFragment {
                 }
             });
         }
-        LeBottomSheet leBottomSheet = builder.build();
-        leBottomSheet.setCanceledOnTouchOutside(false);
-        return leBottomSheet;
+        return builder.build();
     }
 
 }

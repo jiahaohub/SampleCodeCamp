@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.le.samplecodecamp.R;
-import com.letv.shared.widget.LeBottomSheet;
 
 /**
  * Created by zhangjiahao on 17-2-23.
@@ -24,6 +23,7 @@ public class NetworkConfirmFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putParcelable(ARG_APP_INFO, appInfo);
         fragment.setArguments(args);
+        fragment.setCancelable(false);
         return fragment;
     }
 
@@ -46,7 +46,10 @@ public class NetworkConfirmFragment extends DialogFragment {
 
         if (NetStatusUtils.isWifi(getContext())) {
             dismissAllowingStateLoss();
-            //TODO download fragment
+            DownloadApkFragment fragment = DownloadApkFragment.newInstance(mAppInfo, false);
+            getFragmentManager().beginTransaction()
+                    .add(fragment, mAppInfo.packageName)
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -75,7 +78,10 @@ public class NetworkConfirmFragment extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         dismissAllowingStateLoss();
-                        //TODO download fragment
+                        DownloadApkFragment fragment = DownloadApkFragment.newInstance(mAppInfo, true);
+                        getFragmentManager().beginTransaction()
+                                .add(fragment, mAppInfo.packageName)
+                                .commitAllowingStateLoss();
                     }
                 })
                 .setNegativeBtn(getContext().getString(R.string.le_btn_string_cancel), new View.OnClickListener() {
@@ -87,9 +93,7 @@ public class NetworkConfirmFragment extends DialogFragment {
                         }
                     }
                 });
-        LeBottomSheet leBottomSheet = builder.build();
-        leBottomSheet.setCanceledOnTouchOutside(false);
-        return leBottomSheet;
+        return builder.build();
     }
 
 }

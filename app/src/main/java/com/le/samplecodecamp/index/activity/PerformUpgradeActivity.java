@@ -33,11 +33,13 @@ public class PerformUpgradeActivity extends AppCompatActivity implements UpdateL
     @Override
     public void onCheckResult(String pkg, AppInfo appInfo) {
         LogUtils.i(TAG, appInfo == null ? "up-to-date" : "out-of-date");
+        Toast.makeText(this, appInfo == null ? "up-to-date" : "out-of-date", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onFail(String pkg, int code) {
         LogUtils.i(TAG, "fail code %d", code);
+        Toast.makeText(this, "fail code " + code, Toast.LENGTH_SHORT).show();
     }
 
     @Override

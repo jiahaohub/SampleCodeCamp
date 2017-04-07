@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.le.samplecodecamp">
+          package="com.le.samplecodecamp">
 
-    <uses-permission android:name="android.permission.REAL_GET_TASKS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.REAL_GET_TASKS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <!-- 获取IMEI -->
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".App"
@@ -23,9 +24,9 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -35,18 +36,18 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.le.samplecodecamp.backgraound" />
+                <action android:name="com.le.samplecodecamp.backgraound"/>
             </intent-filter>
         </service>
 
         <!-- 测试LogUtils写入文件 -->
-        <activity android:name=".index.activity.LogFileActivity" />
+        <activity android:name=".index.activity.LogFileActivity"/>
 
         <!-- 查看domain日志文件 -->
-        <activity android:name=".index.activity.LogMonitorActivity" />
+        <activity android:name=".index.activity.LogMonitorActivity"/>
 
         <!-- 管理自升级的activity -->
-        <activity android:name=".index.activity.PerformUpgradeActivity" />
+        <activity android:name=".index.activity.PerformUpgradeActivity"/>
     </application>
 
 </manifest>

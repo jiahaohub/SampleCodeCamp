@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.TextureView;
 
 import com.eui.sdk.independent.net.ResponseWrapper;
 import com.eui.sdk.independent.util.UpdateUtil;
@@ -130,16 +131,22 @@ public class VersionCheckFragment extends Fragment {
                 JSONObject jsonObject = new JSONObject(response.data);
                 int errno = jsonObject.optInt("errno");
                 String errmsg = jsonObject.optString("errmsg");
-                if (errno != 10000) {
+                JSONObject data = jsonObject.optJSONObject("data");
+                String fileUrl = data.optString("fileUrl");
+                String packageName = data.optString("packageName");
+                String md5 = data.optString("fileMd5");
+                if (errno != 10000 || TextUtils.isEmpty(fileUrl)
+                        || TextUtils.isEmpty(packageName)
+                        || TextUtils.isEmpty(md5)) {
                     return null;
                 }
                 AppInfo appInfo = new AppInfo();
-                JSONObject data = jsonObject.optJSONObject("data");
+                appInfo.fileUrl = fileUrl;
+                appInfo.packageName = packageName;
+                appInfo.fileMd5 = md5;
                 appInfo.apkVersion = data.optString("apkVersion");
-                appInfo.fileUrl = data.optString("fileUrl");
                 appInfo.description = data.optString("description");
-                appInfo.packageName = data.optString("packageName");
-                appInfo.upgradeType = data.optInt("upgradeType", -1);
+                appInfo.upgradeType = data.optInt("upgradeType");
                 result.mAppInfo = appInfo;
                 return result;
             } catch (JSONException e) {
