@@ -67,8 +67,8 @@ public class VersionCheckFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         if (mRunningTask == null) {
             mRunningTask = new NewVersionCheckTask();
             mRunningTask.execute();
@@ -76,8 +76,8 @@ public class VersionCheckFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
         if (mRunningTask != null) {
             mRunningTask.cancel(true);
             mRunningTask = null;
@@ -160,11 +160,11 @@ public class VersionCheckFragment extends Fragment {
             getFragmentManager().beginTransaction().remove(VersionCheckFragment.this).commitAllowingStateLoss();
             if (null == result) {
                 if (mListener != null) {
-                    mListener.onCheckResult(mPackageName, null);
+                    mListener.onCheckResult(mPackageName, null, false);
                 }
             } else if (result.mAppInfo != null) {
                 if (mListener != null) {
-                    mListener.onCheckResult(mPackageName, result.mAppInfo);
+                    mListener.onCheckResult(mPackageName, result.mAppInfo, true);
                 }
                 AnnouncementFragment.getInstance(result.mAppInfo).show(getFragmentManager(), mPackageName);
             } else {

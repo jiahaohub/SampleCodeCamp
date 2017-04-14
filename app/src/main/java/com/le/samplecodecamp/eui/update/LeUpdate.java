@@ -5,24 +5,25 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.ActivityInfo;
 
+import com.le.samplecodecamp.utils.LogUtils;
+
 /**
- * Created by zhangjiahao on 17-3-31.
+ * Created by zhangjiahao on 17-4-13.
  */
 
-public class UpdateManager {
+public class LeUpdate {
 
-    private static final String TAG = "UpdateManager";
+    private static final String TAG = "LeUpdate";
 
-    public static boolean enqueue(Activity activity, String pkg) {
+    public static void check(Activity activity, String pkg) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         FragmentManager fm = activity.getFragmentManager();
         Fragment fragment = fm.findFragmentByTag(pkg);
         if (fragment == null) {
             fragment = VersionCheckFragment.newInstance(pkg);
             fm.beginTransaction().add(fragment, pkg).commitAllowingStateLoss();
-            return true;
+        } else {
+            LogUtils.i(TAG, "already running...");
         }
-        return false;
     }
-
 }

@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import com.le.samplecodecamp.R;
 import com.le.samplecodecamp.eui.update.AppInfo;
+import com.le.samplecodecamp.eui.update.LeUpdate;
 import com.le.samplecodecamp.eui.update.UpdateListener;
-import com.le.samplecodecamp.eui.update.UpdateManager;
 import com.le.samplecodecamp.utils.LogUtils;
 
 public class PerformUpgradeActivity extends AppCompatActivity implements UpdateListener {
@@ -22,8 +22,8 @@ public class PerformUpgradeActivity extends AppCompatActivity implements UpdateL
     }
 
     public void upgrade(View view) {
-        boolean enqueued = UpdateManager.enqueue(this, "com.eui.sdk.upgrade.aar.example");
-        LogUtils.i(TAG, enqueued ? "start check" : "is running");
+        LeUpdate.check(this, "com.eui.sdk.upgrade.aar.example");
+        LogUtils.i(TAG, "start check");
     }
 
     public void showToast(View view) {
@@ -31,9 +31,9 @@ public class PerformUpgradeActivity extends AppCompatActivity implements UpdateL
     }
 
     @Override
-    public void onCheckResult(String pkg, AppInfo appInfo) {
-        LogUtils.i(TAG, appInfo == null ? "up-to-date" : "out-of-date");
-        Toast.makeText(this, appInfo == null ? "up-to-date" : "out-of-date", Toast.LENGTH_SHORT).show();
+    public void onCheckResult(String pkg, AppInfo appInfo, boolean isExpired) {
+        LogUtils.i(TAG, isExpired ? "out-of-date" : "up-to-date");
+        Toast.makeText(this, isExpired ? "out-of-date" : "up-to-date", Toast.LENGTH_SHORT).show();
     }
 
     @Override

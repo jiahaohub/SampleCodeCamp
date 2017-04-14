@@ -6,7 +6,7 @@ package com.le.samplecodecamp.eui.update;
 
 public interface UpdateListener {
 
-    void onCheckResult(String pkg, AppInfo appInfo);
+    void onCheckResult(String pkg, AppInfo appInfo, boolean isExpired);
 
     void onFail(String pkg, int code);
 

@@ -3,10 +3,14 @@ package com.le.samplecodecamp.eui.update;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 
 import com.le.samplecodecamp.R;
+
+import java.io.File;
 
 /**
  * Created by zhangjiahao on 17-2-23.
@@ -35,6 +39,17 @@ public class NetworkConfirmFragment extends DialogFragment {
             mAppInfo = getArguments().getParcelable(ARG_APP_INFO);
         }
 
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        final File apk = new File(dir, "update/" + mAppInfo.fileMd5 + ".apk");
+        if (apk.exists()) {
+            InstallFragment fragment = InstallFragment.getInstance(Uri.fromFile(apk), mAppInfo);
+            getFragmentManager().beginTransaction().
+                    add(fragment, mAppInfo.packageName).
+                    commitAllowingStateLoss();
+            dismissAllowingStateLoss();
+            return;
+        }
+
         // 没网
         if (!NetStatusUtils.isNetWorkAvailable(getContext())) {
             if (mListener != null) {
@@ -46,7 +61,7 @@ public class NetworkConfirmFragment extends DialogFragment {
 
         if (NetStatusUtils.isWifi(getContext())) {
             dismissAllowingStateLoss();
-            DownloadApkFragment fragment = DownloadApkFragment.newInstance(mAppInfo, false);
+            DownloadApkFragment fragment = DownloadApkFragment.newInstance(mAppInfo);
             getFragmentManager().beginTransaction()
                     .add(fragment, mAppInfo.packageName)
                     .commitAllowingStateLoss();
@@ -78,7 +93,7 @@ public class NetworkConfirmFragment extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         dismissAllowingStateLoss();
-                        DownloadApkFragment fragment = DownloadApkFragment.newInstance(mAppInfo, true);
+                        DownloadApkFragment fragment = DownloadApkFragment.newInstance(mAppInfo);
                         getFragmentManager().beginTransaction()
                                 .add(fragment, mAppInfo.packageName)
                                 .commitAllowingStateLoss();
