@@ -11,7 +11,13 @@ import com.eui.sdk.independent.util.PhoneUtil;
 import com.eui.sdk.independent.util.UpdateUtil;
 import com.eui.sdk.independent.util.UserAgent;
 
+import java.io.IOException;
 import java.util.HashMap;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by spring on 16-9-8.
@@ -70,6 +76,23 @@ public class NetEngine {
         }
 
         //请求数据
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request originalRequest = chain.request();
+                        return chain.proceed(
+                                originalRequest.newBuilder()
+                                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                                        .build());
+                    }
+                })
+                .build();
+//        client.newCall(request).execute();
+
         ResponseWrapper response = HttpHelper.doGet(url);
 
         return response;

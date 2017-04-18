@@ -21,7 +21,7 @@ public class LeUpdate {
         Fragment fragment = fm.findFragmentByTag(pkg);
         if (fragment == null) {
             fragment = VersionCheckFragment.newInstance(pkg);
-            fm.beginTransaction().add(fragment, pkg).commitAllowingStateLoss();
+            fm.beginTransaction().add(fragment, pkg).commit();
         } else {
             LogUtils.i(TAG, "already running...");
         }

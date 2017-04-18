@@ -1,18 +1,17 @@
 package com.le.samplecodecamp.eui.update;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.TextureView;
 
 import com.eui.sdk.independent.net.ResponseWrapper;
 import com.eui.sdk.independent.util.UpdateUtil;
 import com.le.samplecodecamp.eui.domain.LeDomainManager;
+import com.le.samplecodecamp.utils.LogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,20 +75,22 @@ public class VersionCheckFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         if (mRunningTask != null) {
             mRunningTask.cancel(true);
             mRunningTask = null;
         }
     }
 
-    private class NewVersionCheckTask extends AsyncTask<Void, Void, BackgroundResult> {
+    private class NewVersionCheckTask extends AsyncTask<Void, Void, Void> {
+
+        private boolean hasError;
+        private int mErrorCode;
+        private AppInfo mAppInfo;
 
         @Override
-        protected BackgroundResult doInBackground(Void... params) {
-            BackgroundResult result = new BackgroundResult();
-
+        protected Void doInBackground(Void... params) {
             // 获取imei
             TelephonyManager tm = (TelephonyManager) getContext()
                     .getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -103,27 +104,36 @@ public class VersionCheckFragment extends Fragment {
             LeDomainManager leDomainManager = new LeDomainManager(getContext().getContentResolver());
             try {
                 ota = leDomainManager.blockingGetGroupDomain(imei, "ota").get("ota");
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 Log.w(TAG, "Error get ota host, maybe no internet.", e);
-                result.mErrorCode = 1;
-                return result;
+                hasError = true;
+                mErrorCode = 1;
+                return null;
+            } catch (InterruptedException e) {
+                Log.w(TAG, "thread is interrupted.", e);
+                return null;
             }
+
             if (TextUtils.isEmpty(ota)) {
                 Log.w(TAG, "Error get ota host, maybe no such label named ota.");
                 return null;
             }
+
             // 请求网络
             NetEngine netEngine = new NetEngine(getContext(), ota);
             ResponseWrapper response = netEngine.requestApkInfo(getContext(), mPackageName,
                     UpdateUtil.getVersion(getContext().getApplicationContext(), mPackageName));
             if (response.status == -1) {
                 // 没网
-                result.mErrorCode = 1;
+                hasError = true;
+                mErrorCode = 2;
+                return null;
             }
             if (response.status != 200 || TextUtils.isEmpty(response.data)) {
                 // 请求到错误数据
-                result.mErrorCode = 1;
-                return result;
+                hasError = true;
+                mErrorCode = 3;
+                return null;
             }
 
             // 解析
@@ -147,8 +157,8 @@ public class VersionCheckFragment extends Fragment {
                 appInfo.apkVersion = data.optString("apkVersion");
                 appInfo.description = data.optString("description");
                 appInfo.upgradeType = data.optInt("upgradeType");
-                result.mAppInfo = appInfo;
-                return result;
+                mAppInfo = appInfo;
+                mAppInfo = appInfo;
             } catch (JSONException e) {
                 Log.w(TAG, "parse json error", e);
             }
@@ -156,28 +166,25 @@ public class VersionCheckFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(BackgroundResult result) {
+        protected void onPostExecute(Void result) {
             getFragmentManager().beginTransaction().remove(VersionCheckFragment.this).commitAllowingStateLoss();
-            if (null == result) {
+            if (hasError) {
                 if (mListener != null) {
-                    mListener.onCheckResult(mPackageName, null, false);
+                    mListener.onFail(mPackageName, mErrorCode);
                 }
-            } else if (result.mAppInfo != null) {
-                if (mListener != null) {
-                    mListener.onCheckResult(mPackageName, result.mAppInfo, true);
-                }
-                AnnouncementFragment.getInstance(result.mAppInfo).show(getFragmentManager(), mPackageName);
             } else {
                 if (mListener != null) {
-                    mListener.onFail(mPackageName, result.mErrorCode);
+                    mListener.onCheckResult(mPackageName, mAppInfo, true);
                 }
+                AnnouncementFragment.getInstance(mAppInfo).show(getFragmentManager(), mPackageName);
             }
         }
-    }
 
-    private class BackgroundResult {
-        int mErrorCode;
-        AppInfo mAppInfo;
+        @Override
+        protected void onCancelled() {
+            LogUtils.i(TAG, "cancelled check version for %s", mPackageName);
+            getFragmentManager().beginTransaction().remove(VersionCheckFragment.this).commitAllowingStateLoss();
+        }
     }
 
 }

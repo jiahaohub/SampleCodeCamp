@@ -25,10 +25,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
+import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ForwardingSource;
 import okio.Okio;
-import okio.Sink;
 import okio.Source;
 
 public class DownloadApkFragment extends DialogFragment {
@@ -115,7 +115,7 @@ public class DownloadApkFragment extends DialogFragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            final File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             final File temp = new File(dir, "update/" + mAppInfo.fileMd5 + ".temp");
             final File apk = new File(dir, "update/" + mAppInfo.fileMd5 + ".apk");
             if (temp.exists()) {
@@ -132,6 +132,8 @@ public class DownloadApkFragment extends DialogFragment {
             final ProgressListener progressListener = new ProgressListener() {
                 @Override
                 public void update(long bytesRead, long contentLength, boolean done) {
+                    LogUtils.i(TAG, "total size %d, current size %d, is done %s",
+                            contentLength, bytesRead, done);
                     if (done) {
                         if (temp.renameTo(apk)) {
                             InstallFragment fragment = InstallFragment.
@@ -168,13 +170,9 @@ public class DownloadApkFragment extends DialogFragment {
                 if (!response.isSuccessful()) {
                     throw new IOException("bad request, code is " + response.code());
                 }
-                try (Source source = Okio.source(response.body().byteStream());
-                     Sink sink = Okio.sink(temp)) {
-                    Buffer buffer = new Buffer();
-                    while (source.read(buffer, 1024 * 8) != -1) {
-                        sink.write(buffer, buffer.size());
-                        sink.flush();
-                    }
+                try (BufferedSink sink = Okio.buffer(Okio.sink(temp))) {
+                    long totalBytesRead = sink.writeAll(response.body().source());
+                    LogUtils.i(TAG, "total read %d bytes.", totalBytesRead);
                 }
             } catch (final IOException e) {
                 LogUtils.e(TAG, e, "download fail");

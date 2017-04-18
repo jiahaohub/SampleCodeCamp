@@ -1,5 +1,6 @@
 package com.le.samplecodecamp.index.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -28,6 +29,7 @@ public class PerformUpgradeActivity extends AppCompatActivity implements UpdateL
 
     public void showToast(View view) {
         Toast.makeText(this, "boom boom boom", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, PerformUpgradeActivity.class));
     }
 
     @Override
