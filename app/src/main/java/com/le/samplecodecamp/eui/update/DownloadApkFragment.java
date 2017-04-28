@@ -35,11 +35,18 @@ public class DownloadApkFragment extends DialogFragment {
 
     private static final String TAG = "DownloadApkFragment";
     private static final String ARG_APP_INFO = "arg_app_info";
+    private static final String PACKAGE_MIME_TYPE = "application/vnd.android.package-archive";
+
     private final Handler mMainHandler;
 
     private AppInfo mAppInfo;
-    private UpdateListener mListener;
+    private DialogListener mListener;
     private DownloadTask mRunningTask;
+
+    public interface DialogListener {
+
+        void onCancel();
+    }
 
     public DownloadApkFragment() {
         mMainHandler = new Handler();
@@ -70,15 +77,9 @@ public class DownloadApkFragment extends DialogFragment {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (mRunningTask != null) {
-                                    mRunningTask.cancel(true);
-                                    mRunningTask = null;
+                                if (mListener != null) {
+                                    mListener.onCancel();
                                 }
-                                if (mAppInfo.isForce()) {
-                                    AnnouncementFragment.getInstance(mAppInfo)
-                                            .show(getFragmentManager(), mAppInfo.packageName);
-                                }
-                                dismissAllowingStateLoss();
                             }
                         });
         return dialogBuilder.build();
@@ -87,8 +88,8 @@ public class DownloadApkFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof UpdateListener) {
-            mListener = (UpdateListener) context;
+        if (context instanceof DialogListener) {
+            mListener = (DialogListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement UpdateListener");
@@ -101,23 +102,13 @@ public class DownloadApkFragment extends DialogFragment {
         mListener = null;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        if (!mAppInfo.isForce()) {
-//            getDialog().hide();
-//        }
-        mRunningTask = new DownloadTask();
-        mRunningTask.execute();
-    }
-
     private class DownloadTask extends AsyncTask<Void, Long, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
             final File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            final File temp = new File(dir, "update/" + mAppInfo.fileMd5 + ".temp");
-            final File apk = new File(dir, "update/" + mAppInfo.fileMd5 + ".apk");
+            final File temp = new File(dir, "acceptUpdate/" + mAppInfo.fileMd5 + ".temp");
+            final File apk = new File(dir, "acceptUpdate/" + mAppInfo.fileMd5 + ".apk");
             if (temp.exists()) {
                 temp.delete();
             }
@@ -170,6 +161,9 @@ public class DownloadApkFragment extends DialogFragment {
                 if (!response.isSuccessful()) {
                     throw new IOException("bad request, code is " + response.code());
                 }
+                if (!PACKAGE_MIME_TYPE.equals(response.body().contentType().toString())) {
+                    throw new IOException("bad request, content type is " + response.body().contentType());
+                }
                 try (BufferedSink sink = Okio.buffer(Okio.sink(temp))) {
                     long totalBytesRead = sink.writeAll(response.body().source());
                     LogUtils.i(TAG, "total read %d bytes.", totalBytesRead);
@@ -181,7 +175,7 @@ public class DownloadApkFragment extends DialogFragment {
                     public void run() {
                         String message = e.getMessage();
                         if (!"thread interrupted".equals(message) && mListener != null) {
-                            mListener.onFail(mAppInfo.packageName, 1);
+//                            mListener.onFail(mAppInfo.packageName, 1);
                         } else {
                             dismissAllowingStateLoss();
                         }

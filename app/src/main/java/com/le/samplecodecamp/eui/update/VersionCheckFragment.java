@@ -174,9 +174,9 @@ public class VersionCheckFragment extends Fragment {
                 }
             } else {
                 if (mListener != null) {
-                    mListener.onCheckResult(mPackageName, mAppInfo, true);
+                    mListener.onAction(mPackageName, UpdateListener.ACTION_VERSION_RESULT, mAppInfo);
                 }
-                AnnouncementFragment.getInstance(mAppInfo).show(getFragmentManager(), mPackageName);
+                AnnouncementFragment.newInstance(mAppInfo).show(getFragmentManager(), mPackageName);
             }
         }
 

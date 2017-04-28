@@ -23,7 +23,7 @@ public class PerformUpgradeActivity extends AppCompatActivity implements UpdateL
     }
 
     public void upgrade(View view) {
-        LeUpdate.check(this, "com.eui.sdk.upgrade.aar.example");
+        LeUpdate.check(this, "com.eui.sdk.upgrade.aar.example", this);
         LogUtils.i(TAG, "start check");
     }
 
@@ -33,15 +33,35 @@ public class PerformUpgradeActivity extends AppCompatActivity implements UpdateL
     }
 
     @Override
-    public void onCheckResult(String pkg, AppInfo appInfo, boolean isExpired) {
-        LogUtils.i(TAG, isExpired ? "out-of-date" : "up-to-date");
-        Toast.makeText(this, isExpired ? "out-of-date" : "up-to-date", Toast.LENGTH_SHORT).show();
+    public void onAction(String pkg, int code, AppInfo appInfo) {
+        switch (code) {
+            case UpdateListener.ACTION_VERSION_RESULT:
+                boolean expired = appInfo != null;
+                Toast.makeText(this, expired ? "out-of-date" : "up-to-date", Toast.LENGTH_SHORT).show();
+                break;
+            case UpdateListener.ACTION_START_DOWNLOAD:
+                Toast.makeText(this, "开始下载", Toast.LENGTH_SHORT).show();
+                break;
+            case UpdateListener.ACTION_START_INSTALL:
+                Toast.makeText(this, "开始安装", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     @Override
     public void onFail(String pkg, int code) {
-        LogUtils.i(TAG, "fail code %d", code);
-        Toast.makeText(this, "fail code " + code, Toast.LENGTH_SHORT).show();
+        switch (code) {
+            case UpdateListener.ERROR_CODE_NETWORK:
+                Toast.makeText(this, "网络问题", Toast.LENGTH_SHORT).show();
+                break;
+            case UpdateListener.ERROR_CODE_DOWNLOAD:
+                Toast.makeText(this, "下载失败", Toast.LENGTH_SHORT).show();
+                break;
+            case UpdateListener.ERROR_CODE_INSTALL:
+                Toast.makeText(this, "安装失败", Toast.LENGTH_SHORT).show();
+
+                break;
+        }
     }
 
     @Override

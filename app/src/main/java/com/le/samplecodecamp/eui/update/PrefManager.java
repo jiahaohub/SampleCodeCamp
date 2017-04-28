@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 
 public class PrefManager {
 
-    private static final String sPrefName = "update.pref";
+    private static final String sPrefName = "acceptUpdate.pref";
 
     public static void putInt(Context context, String name, int value) {
         SharedPreferences sp = context.getSharedPreferences(sPrefName, Context.MODE_PRIVATE);

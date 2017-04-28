@@ -49,6 +49,10 @@
 
         <!-- 管理自升级的activity -->
         <activity android:name=".index.activity.PerformUpgradeActivity"/>
+        <!-- 显示自升级对话框的activity -->
+        <activity android:name=".eui.update.UpdateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
     </application>
 
 </manifest>

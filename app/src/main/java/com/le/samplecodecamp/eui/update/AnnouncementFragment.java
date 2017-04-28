@@ -13,9 +13,16 @@ public class AnnouncementFragment extends DialogFragment {
 
     private static final String ARG_APP_INFO = "arg_app_info";
     private AppInfo mAppInfo;
-    private UpdateListener mListener;
+    private DialogListener mListener;
 
-    public static AnnouncementFragment getInstance(AppInfo appInfo) {
+    public interface DialogListener {
+
+        void onAcceptUpdate();
+
+        void onRejectUpdate();
+    }
+
+    public static AnnouncementFragment newInstance(AppInfo appInfo) {
         AnnouncementFragment fragment = new AnnouncementFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_APP_INFO, appInfo);
@@ -35,8 +42,8 @@ public class AnnouncementFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof UpdateListener) {
-            mListener = (UpdateListener) context;
+        if (context instanceof DialogListener) {
+            mListener = (DialogListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement UpdateListener");
@@ -57,36 +64,21 @@ public class AnnouncementFragment extends DialogFragment {
                 .setContent(mAppInfo.description);
 
         // 按键事件
-        if (mAppInfo.isForce()) {
-            builder.setPositiveBtn(getContext().getString(R.string.le_btn_string_upgrade_now), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismissAllowingStateLoss();
-                    NetworkConfirmFragment fragment = NetworkConfirmFragment.getInstance(mAppInfo);
-                    fragment.show(getFragmentManager(), mAppInfo.packageName);
+        builder.setPositiveBtn(getContext().getString(R.string.le_btn_string_upgrade_now), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onAcceptUpdate();
                 }
-            }).setNegativeBtn(getContext().getString(R.string.le_btn_string_exit), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismissAllowingStateLoss();
-                    if (mListener != null) mListener.onExit();
+            }
+        }).setNegativeBtn(getContext().getString(R.string.le_btn_string_exit), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onRejectUpdate();
                 }
-            });
-        } else {
-            builder.setPositiveBtn(getContext().getString(R.string.le_btn_string_upgrade_now), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismissAllowingStateLoss();
-                    NetworkConfirmFragment fragment = NetworkConfirmFragment.getInstance(mAppInfo);
-                    fragment.show(getFragmentManager(), mAppInfo.packageName);
-                }
-            }).setNegativeBtn(getContext().getString(R.string.le_btn_string_remind_later), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismissAllowingStateLoss();
-                }
-            });
-        }
+            }
+        });
         return builder.build();
     }
 

@@ -58,7 +58,7 @@ public class InstallFragment extends Fragment {
             switch (resultCode) {
                 case Activity.RESULT_CANCELED:
                     if (mAppInfo.isForce()) {
-                        AnnouncementFragment.getInstance(mAppInfo).
+                        AnnouncementFragment.newInstance(mAppInfo).
                                 show(getFragmentManager(), mAppInfo.packageName);
                     }
                     break;

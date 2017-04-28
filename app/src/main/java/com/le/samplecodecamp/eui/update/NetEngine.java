@@ -66,7 +66,44 @@ public class NetEngine {
         if (true) {
             url = Url.GET_SINGLE_APK_INFO_URL_TESTSERVER + "?" + INetEncryptImpl.getInstance().encrypt(params);
         } else {
-//            url = Url.GET_SINGLE_APK_INFO_URL + "?" + INetEncryptImpl.getInstance().encrypt(params);
+//            url = Url.GET_SINGLE_APK_INFO_URL + "?" + INetEncryptImpl.newInstance().encrypt(params);
+            String httpUrl = new Uri.Builder()
+                    .scheme("http")
+                    .authority(mOtaHost)
+                    .appendEncodedPath(Url.PATH_UPGRADE)
+                    .toString();
+            url = httpUrl + "?" + INetEncryptImpl.getInstance().encrypt(params);
+        }
+
+        ResponseWrapper response = HttpHelper.doGet(url);
+
+        return response;
+    }
+
+    public void requestApkInfo(Context context, String packageName, String apkVersion, boolean debug) {
+//请求数据
+        HashMap<String, String> params = new HashMap<>();
+        params.put("packageName", packageName);
+        params.put("apkVersion", apkVersion);
+        params.put("deviceType", "phone");
+
+        String imei = PhoneUtil.getIMEI(context);
+        if (TextUtils.isEmpty(imei)) {//imei
+            params.put("deviceId", "");
+        } else {
+            params.put("deviceId", imei);
+        }
+
+//        params.put("deviceId", "869552020035176");
+        params.put("model", Build.MODEL);//手机型号
+        params.put("region", UpdateUtil.getRegion(context));
+        params.put("user-prefer-language", UpdateUtil.getLanguage(context));
+        params.put("ui", SystemProperties.getEUIVersion("ro.letv.release.version"));
+
+        String url;
+        if (debug) {
+            url = Url.GET_SINGLE_APK_INFO_URL_TESTSERVER + "?" + INetEncryptImpl.getInstance().encrypt(params);
+        } else {
             String httpUrl = new Uri.Builder()
                     .scheme("http")
                     .authority(mOtaHost)
@@ -91,11 +128,11 @@ public class NetEngine {
                     }
                 })
                 .build();
-//        client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
 
-        ResponseWrapper response = HttpHelper.doGet(url);
-
-        return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
