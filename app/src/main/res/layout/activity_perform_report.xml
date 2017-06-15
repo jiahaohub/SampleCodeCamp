@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.le.samplecodecamp.index.activity.PerformReportActivity">
+
+    <Button
+        android:id="@+id/bt_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <EditText
+            android:id="@+id/et_put"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            />
+
+        <Button
+            android:id="@+id/bt_put"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="put"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_value"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="no value"
+            />
+
+        <Button
+            android:id="@+id/bt_get"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get"
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_uri"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="uri"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tv_uri"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bt_init"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="init"
+                />
+
+            <Button
+                android:id="@+id/bt_cover"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="cover"
+                />
+
+            <Button
+                android:id="@+id/bt_append"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="append"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

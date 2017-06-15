@@ -2,6 +2,7 @@ package com.le.samplecodecamp.index;
 
 import com.le.samplecodecamp.index.activity.LogFileActivity;
 import com.le.samplecodecamp.index.activity.LogMonitorActivity;
+import com.le.samplecodecamp.index.activity.PerformReportActivity;
 import com.le.samplecodecamp.index.activity.PerformUpgradeActivity;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class IndexContent {
         addItem(new IndexItem("1", "LogFile", LogFileActivity.class));
         addItem(new IndexItem("2", "show me the fucking log", LogMonitorActivity.class));
         addItem(new IndexItem("3", "Update Apk", PerformUpgradeActivity.class));
+        addItem(new IndexItem("4", "Performance report test", PerformReportActivity.class));
     }
 
     private static void addItem(IndexItem item) {
